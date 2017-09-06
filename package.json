@@ -1,0 +1,15 @@
+{
+  "name": "thales",
+  "version": "1.0.0",
+  "description": "Option pricing calculator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/angular": "^1.6.32",
+    "@types/angular-route": "^1.3.4"
+  }
+}
