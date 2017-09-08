@@ -1,8 +1,16 @@
 declare module Thales.Pricing.Model {
-    export interface OptionChain {
+    export interface Underlying {
         symbol: string,
-        price: string
+        price: number,
         dividend: number,
+        expirations: Expiration[]
+    }
+
+    export interface Expiration {
+        [expiryInDays: number] : OptionChain 
+    }
+
+    export interface OptionChain {
         calls: Strike[],
         puts : Strike[]
     }
@@ -13,8 +21,8 @@ declare module Thales.Pricing.Model {
 
     export interface Option {
         expiryInYears: number,
-        expiryInDays: number
         expiryAsDate: Date,
-        volatility: number
+        volatility: number,
+        theoPrice: number
     }
 }

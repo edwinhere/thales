@@ -9,7 +9,24 @@ module Thales.Yahoo {
             private $sce: ng.ISCEService
         ) {
         }
-        public download(symbol: string): angular.IPromise<Model.OptionChain[]> {
+        public download(symbol: string): angular.IPromise<Pricing.Model.Underlying> {
+            var result = this.downloadAll(symbol).then((promiseValue: Model.OptionChain[]) => {
+                var price: number = promiseValue[0].result[0].quote.regularMarketPrice;
+                var dividend: number = promiseValue[0].result[0].quote.trailingAnnualDividendYield;
+                var expirations: Pricing.Model.Expiration[] = <Pricing.Model.Expiration[]>[];
+                angular.forEach(promiseValue, (optionChain: Model.OptionChain, index: number) => {
+                    optionChain.result[0].options;
+                });
+                return <Pricing.Model.Underlying>{
+                    symbol: symbol,
+                    price: price,
+                    dividend: dividend,
+                    expirations: expirations
+                };
+            });
+            return result;
+        }
+        public downloadAll(symbol: string): angular.IPromise<Model.OptionChain[]> {
             var results = this.$http.jsonp(this.$sce.trustAsResourceUrl("https://query1.finance.yahoo.com/v7/finance/options/" + symbol))
                 .then((promiseValue: angular.IHttpResponse<Model.RootObject>) => {
                     var rootObject: Model.RootObject = promiseValue.data;
@@ -48,10 +65,10 @@ module Thales.Yahoo {
         }
 
         public testDownload(): void {
-            var promise = this.download("AAPL");
+            var promise = this.downloadAll("AAPL");
             promise.then((promiseValue: Model.OptionChain[]) => {
                 var result = promiseValue.every((value: Model.OptionChain, index: number): boolean => {
-                    if(value.error) {
+                    if (value.error) {
                         console.error(value.error);
                     }
                     return !value.error;
